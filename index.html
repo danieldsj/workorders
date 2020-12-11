@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<header>
+
+</header>
+
+<body>
+    Industry: <span id="industry"></span><br>
+    Spot: <span id="spot"></span><br>
+    Car Limit: <span id="carLimit"></span><br>
+    Order: <span id="order"></span><br>
+</body>
+<script type="text/javascript">
+
+    var spots = [
+        {
+            "industry": "industry1",
+            "spot": "spot1",
+            "carLimit": 2,
+            "perCarLimit": {
+                "boxcars": 2,
+                "hoppers": 2,
+                "flatcars": 2,
+                "gondolas": 2,
+                "tanker": 2
+            }
+        },
+        {
+            "industry": "industry2",
+            "spot": "spot1",
+            "carLimit": 3,
+            "perCarLimit": {
+                "boxcars": 2,
+                "hoppers": 1,
+                "flatcars": 0,
+                "gondolas": 0,
+                "tanker": 1
+            }
+        },
+        {
+            "industry": "industry3",
+            "spot": "spot1",
+            "carLimit": 3,
+            "perCarLimit": {
+                "boxcars": 0,
+                "hoppers": 3,
+                "flatcars": 0,
+                "gondolas": 0,
+                "tanker": 3
+            }
+        }
+    ]
+
+    console.log(`Randomizing a spot.`);
+    var randomSpotIndex = Math.floor(Math.random() * Math.floor(spots.length));
+    var spotObject = spots[randomSpotIndex];
+    var industry = spotObject.industry;
+    var spot = spotObject.spot;
+    var carLimit = spotObject.carLimit;
+    console.log(`Random spot selected. Industry "${industry}" Spot "${spot}".`);
+
+    console.log(`Randomizing order.`);
+    var perCarLimitObject = spotObject.perCarLimit;
+    var cars = Object.keys(perCarLimitObject);
+    var order = {}
+    var counter = carLimit;
+    do {
+        var randomCarIndex = Math.floor(Math.random() * Math.floor(cars.length));
+        var car = cars[randomCarIndex];
+        var maximumQuantity = Math.max(counter, perCarLimitObject[car]);
+        var randomAmount = Math.floor(Math.random() * Math.floor(maximumQuantity));
+        if (randomAmount > 0) {
+            order[car] = randomAmount;
+            counter = counter - randomAmount;
+            console.log(`Added item to order: ${car} x ${randomAmount}.`);
+        }
+    } while (counter > 0);
+
+    var industryElement = document.getElementById("industry");
+    var spotElement = document.getElementById("spot");
+    var orderElement = document.getElementById("order");
+    var carLimitElement = document.getElementById("carLimit");
+
+    industryElement.innerText = industry;
+    spotElement.innerText = spot;
+    carLimitElement.innerText = carLimit
+
+    for (var key in order) {
+        orderElement.innerText += ` ${key}x${order[key]} `;
+    };
+
+
+
+</script>
+
+</html>
