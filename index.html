@@ -12,6 +12,14 @@
 </body>
 <script type="text/javascript">
 
+    /* https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array */
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
     var spots = [
         {
             "industry": "industry1",
@@ -59,22 +67,35 @@
     var carLimit = spotObject.carLimit;
     console.log(`Random spot selected. Industry "${industry}" Spot "${spot}".`);
 
-    console.log(`Randomizing order.`);
+    console.log(`Randomizing order items.`);
     var perCarLimitObject = spotObject.perCarLimit;
     var cars = Object.keys(perCarLimitObject);
+    shuffleArray(cars);
     var order = {}
-    var counter = carLimit;
-    do {
-        var randomCarIndex = Math.floor(Math.random() * Math.floor(cars.length));
-        var car = cars[randomCarIndex];
-        var maximumQuantity = Math.max(counter, perCarLimitObject[car]);
-        var randomAmount = Math.floor(Math.random() * Math.floor(maximumQuantity));
-        if (randomAmount > 0) {
-            order[car] = randomAmount;
-            counter = counter - randomAmount;
-            console.log(`Added item to order: ${car} x ${randomAmount}.`);
+    var counter = 0;
+
+    for (var i = 0; i < cars.length; i++) {
+        var car = cars[i];
+
+        console.log(`Random car selected: ${car}`);
+        var spaceRemaining = carLimit - counter;
+
+        console.log(`Getting the lower value between space remaining (${spaceRemaining}) and the max car limit (${perCarLimitObject[car]}) to use as a ceiling.`);
+        var maximumQuantity = Math.min(spaceRemaining, perCarLimitObject[car]);
+        console.log(`Maximum quantity is ${maximumQuantity}.`);
+
+        if (maximumQuantity > 0) {
+            console.log(`Randominzing amount of cars`);
+            var randomAmount = Math.floor(Math.random() * Math.floor(maximumQuantity - 1)) + 1;
+            console.log(`Random amount is ${randomAmount}.`);
+
+            if (randomAmount > 0) {
+                order[car] = randomAmount;
+                counter++;
+                console.log(`Added item to order: ${car} x ${randomAmount}.`);
+            };
         }
-    } while (counter > 0);
+    }
 
     var industryElement = document.getElementById("industry");
     var spotElement = document.getElementById("spot");
@@ -86,10 +107,8 @@
     carLimitElement.innerText = carLimit
 
     for (var key in order) {
-        orderElement.innerText += ` ${key}x${order[key]} `;
+        orderElement.innerText += ` ${key} x${order[key]} `;
     };
-
-
 
 </script>
 
