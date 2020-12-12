@@ -59,6 +59,15 @@
         }
     ]
 
+    var params = new URLSearchParams(window.location.search)
+    var providedSpots = JSON.parse(params.get("spots"));
+    if(typeof providedSpots === 'object' && providedSpots !== null) {
+        console.log(`Using provided spots`);
+        spots = providedSpots;
+    } else {
+        console.log(`Using default spots: ${JSON.stringify(spots)}`);
+    };
+
     console.log(`Randomizing a spot.`);
     var randomSpotIndex = Math.floor(Math.random() * Math.floor(spots.length));
     var spotObject = spots[randomSpotIndex];
